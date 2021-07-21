@@ -35,3 +35,24 @@ class Connection_with_timeout:
 
     def stop_thread(self):
         self.breaks.set()
+
+def wrapper(q):
+    while True:
+        item = q.get()
+        process(item)
+
+
+c = Connection_with_timeout(0.1)
+t = Thread(target=wrapper, args=(q,))
+t.start()
+for _ in range(10):
+     i = c.next()
+     q.put(i)
+
+
+
+c = Connection_with_timeout(0.4)
+
+for _ in range(10):
+    i = c.next()
+    process(i)
